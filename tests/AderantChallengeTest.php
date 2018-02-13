@@ -41,10 +41,45 @@ class AderantChallengeTest extends TestCase {
 
 	public function testGetPositionOfChar() {
 		$this->Genome->setFragments();
-		$position = $this->Genome->getPositionOfChar('i', 3);
+		$position = $this->Genome->getPositionOfMatch('i', 3);
 		$this->assertSame($position, 0);
 	}
 
-	
+	public function testGetNumberOfMatches() {
+		$this->Genome->setFragments();
+		$result = $this->Genome->getNumberOfMatches('e', 1, 3);
+		$this->assertTrue(is_array($result));
+		$this->assertSame(3, key($result));
+		$this->assertSame(3, $result[3]);
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

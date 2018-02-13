@@ -15,7 +15,7 @@ class GenomeSequence {
 		$handle = fopen($this->filePath, "r");
 		if ($handle) {
 		    while (($buffer = fgets($handle, 4096)) !== false) {
-		        $this->fragments[] = $buffer;
+		        $this->fragments[] = str_replace(" ", "", trim($buffer));
 		    }
 		    fclose($handle);
 		}
@@ -62,7 +62,7 @@ class GenomeSequence {
 	 * @param integer $excludeKey Exclude the current array-value.
 	 * @return integer
 	 */
-	public function getPositionOfChar(string $character, int $excludeKey) : int {
+	public function getPositionOfMatch(string $character, int $excludeKey) : int {
 		$fragments = $this->fragments;
 		unset($fragments[$excludeKey]);
 
@@ -72,6 +72,35 @@ class GenomeSequence {
 			if ($result) {
 				return $index;
 			}
+		}
+	}
+
+	/**
+	 * Returns an array with the index as the index that is being matched against and the value
+	 * as the number of matches/similarities the value has.
+	 * @param string $characters  Passed in as just the first initially but then builds as more 
+	 * 							  matches are found.
+	 * @param integer $source	  The index of the original fragment.
+	 * @param integer $matchIndex The index of the fragment being compared.
+	 * @return array
+	 */ 
+	public function getNumberOfMatches(string $characters, int $source, int $matchIndex) : array {
+		$start = 1;
+		$length = 1;
+		$numberOfMatches = 1;
+
+		while (TRUE) {
+			$builder = substr($this->fragments[$source], $start, $length);
+			$characters .= $builder;
+			$charsExist = strpos($this->fragments[$matchIndex], $characters);
+			if (!$charsExist) {
+
+				return array(
+					$matchIndex => $numberOfMatches
+				);
+			}
+			$start++;
+			$numberOfMatches++;
 		}
 	}
 
@@ -98,10 +127,10 @@ class GenomeSequence {
 			$character = $this->getBeginning($this->fragments[$i]);
 			$inString = $this->inString($character);
 			if ($inString) {
-				$position = $this->getPositionOfChar($character, $excludeKey);
+				$position = $this->getPositionOfMatch($character, $excludeKey);
 
 				//array ($position => $numberOfMatchingChars)
-				$matches = $this->getNumberOfMatch($position);
+				$matches = $this->getNumberOfMatches($character, $i, $position);
 			}
 
 		}
