@@ -1,0 +1,7 @@
+<phpunit colors='true'>
+	<testsuites>
+		<testsuite name="Aderant Challenge - Genome Sequence">
+			<directory>tests/</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
