@@ -23,11 +23,28 @@ class AderantChallengeTest extends TestCase {
 	public function testRead() {
 		$this->assertTrue(is_object($this->Genome->setFragments()));
 		$this->assertTrue(is_array($this->Genome->getFragments()));
+	}
+
+	public function testGetBeginning() {
+		$this->Genome->setFragments();
+		$character = $this->Genome->getBeginning("this is just a sample string");
+		$this->assertEquals("t", $character);
+	}
+
+	public function testInString() {
+		$this->Genome->setFragments();
+		$true = $this->Genome->inString('i');
+		$false = $this->Genome->inString('x');
+		$this->assertTrue($true);
+		$this->assertFalse($false);		
+	}
 
 	public function testGetPositionOfChar() {
 		$this->Genome->setFragments();
 		$position = $this->Genome->getPositionOfChar('i', 3);
 		$this->assertSame($position, 0);
 	}
+
+	
 
 }
