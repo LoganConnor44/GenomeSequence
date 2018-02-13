@@ -50,12 +50,43 @@ class GenomeSequence {
 	 * @param string $fragment The passed in string to analyze
 	 * @return array
 	 */
-	public function getBeginningAndEnd(string $fragment) : array{
+	// public function getBeginningAndEnd(string $fragment) : array{
+	// 	$fragment = trim($fragment);
+	// 	return array(
+	// 		"beginning" => substr($fragment, 0, 1),
+	// 		"end" => substr($fragment, -1)
+	// 	);
+	// }
+
+	public function getBeginning(string $fragment) : string {
 		$fragment = trim($fragment);
-		return array(
-			"beginning" => substr($fragment, 0, 1),
-			"end" => substr($fragment, -1)
-		);
+		return substr($fragment, 0, 1);
+	}
+
+	public function inString(string $begChar) : bool {
+		foreach ($this->fragments as $fragment) {
+			$result = strpos($fragment, $begChar);
+
+			if ($result) {
+				return TRUE;
+			}
+		}
+		return TRUE;
+	}
+
+	/**
+	 */
+	public function getPositionOfChar(string $character, int $excludeKey) : int {
+		$fragments = $this->fragments;
+		unset($fragments[$excludeKey]);
+
+		foreach ($fragments as $index => $fragment) {
+			$result = strpos($fragment, $character);
+
+			if ($result) {
+				return $index;
+			}
+		}
 	}
 
 	/**
@@ -64,9 +95,8 @@ class GenomeSequence {
 	 * @param string $fragment
 	 * @return boolean
 	 */
-	public function containBeginningOrEnd(array $beginningAndEnd, string $fragment) : bool {
-		$beg = strrpos($fragment, $beginningAndEnd["beginning"]);
-		$end = strrpos($fragment, $beginningAndEnd["end"]);
+	public function containBeginning(array $beginning, string $fragment) : bool {
+		$beg = strpos($fragment, $beginning["beginning"]);
 		if ($beg) {
 			return TRUE;
 		}
@@ -75,39 +105,66 @@ class GenomeSequence {
 
 	/**
 	 */
-	public function getCountOfMatches(array $beginningAndEnd, string $fragment) : int {
-		$nextPosition = 1;
-		$charactersToIdentify = 1;
-		$charactersFound = 0;
+	// public function getCountOfMatches(array $beginning) : int {
+	// 	$nextPosition = 1;
+	// 	$charactersToIdentify = 1;
+	// 	$charactersFound = 0;
 
-		while (TRUE) {
-			$character = substr($fragment, $nextPosition, $charactersToIdentify);
-			echo PHP_EOL;
-			echo $character;
-			echo PHP_EOL;
-			$beginningAndEnd["beginning"] .= trim($character);
-			$charsExist = strrpos($fragment, $beginningAndEnd["beginning"]);
+	// 	while (TRUE) {
+	// 		$character = substr($fragment, $nextPosition, $charactersToIdentify);
+	// 		$beginning["beginning"] .= trim($character);
+	// 		var_dump(
+	// 			$beginning,
+	// 			$fragment
+	// 		);
+	// 		$charsExist = strpos($fragment, $beginning["beginning"]);
 
-			if (!$charsExist) {
-				return count($charactersFound);
-			}
+	// 		if ($charsExist === FALSE) {
+	// 			return count($charactersFound);
+	// 		}
 
-			$nextPosition++;
-			$charactersFound++;
-		}
-	}
+	// 		$nextPosition++;
+	// 		$charactersFound++;
+	// 	}
+
+	// 	foreach ($this->fragments as $fragment) {
+	// 		$character = substr($fragment, $nextPosition, $charactersToIdentify);
+	// 	}
+	// }
 
 	public function recompileFragments() {
 		$length = count($this->fragments) - 1;
 		for ($i = 0; $i <= $length; $i++) {
-			$next = $length === $i ? 0 : $i;
-			$beginningAndEnd = $this->getBeginningAndEnd($this->fragments[$i]);
+			$next = $length === $i ? 0 : $i + 1;
+			$beginning = $this->getBeginningAndEnd($this->fragments[$i]);
 
-			$hasBegOrEnd = $this->containBeginningOrEnd($beginningAndEnd, $this->fragments[$next]);
+			$hasBegOrEnd = $this->containBeginning($beginning, $this->fragments[$next]);
 			if ($hasBegOrEnd) {
-				$matches = $this->getCountOfMatches($beginningAndEnd, $this->fragments[$next]);
+				$matches = $this->getCountOfMatches($beginning);
 			}
 		}
+
+
+
+
+
+		$length = count($this->fragments) - 1;
+		for ($i = 0; $i <= $length; $i++) {
+			$next = $length === $i ? 0 : $i + 1;
+
+			$character = $this->getBeginning($this->fragments[$i]);
+			$inString = $this->inString($character);
+			if ($inString) {
+				$position = $this->getPositionOfChar($character, $excludeKey);
+
+				//array ($position => $numberOfMatchingChars)
+				$matches = $this->getNumberOfMatch($position);
+			}
+
+		}
+
+
+
 	}
 
 

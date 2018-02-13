@@ -23,20 +23,11 @@ class AderantChallengeTest extends TestCase {
 	public function testRead() {
 		$this->assertTrue(is_object($this->Genome->setFragments()));
 		$this->assertTrue(is_array($this->Genome->getFragments()));
-	}
 
-	// public function testIntersection() {
-	// 	$this->Genome->setFragments();
-
-	// 	foreach ($this->Genome->getFragments() as $fragment) {
-	// 		var_dump($this->Genome->getBeginningAndEnd($fragment));
-	// 		echo PHP_EOL;
-	// 	}
-	// }
-
-	public function testRecompileFrags() {
-		$this->Genome->setFragments()
-			->recompileFragments();
+	public function testGetPositionOfChar() {
+		$this->Genome->setFragments();
+		$position = $this->Genome->getPositionOfChar('i', 3);
+		$this->assertSame($position, 0);
 	}
 
 }
