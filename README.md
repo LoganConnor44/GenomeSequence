@@ -13,3 +13,9 @@ Write a program that reads a file of text fragments and attempts to reconstruct 
 out of the fragments. The fragments were created by duplicating the original document many times
 over and chopping each copy into pieces. The fragments overlap one another and your program will
 search for overlaps and align the fragments to reassemble them into their original order.
+
+### Fragment Source Text
+* a l l i s w e l l
+* e l l t h a t e n
+* h a t e n d
+* t e n d s w e l l
