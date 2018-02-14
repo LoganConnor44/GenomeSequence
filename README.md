@@ -22,3 +22,21 @@ search for overlaps and align the fragments to reassemble them into their origin
 
 ### Expected Result Text
 * a l l i s w e l l t h a t e n d s w e l l
+
+## How To Verify Correctness
+
+#### Pull In Dependencies
+
+Run From CLI
+
+```
+composer install
+``` 
+
+#### Unit Tests
+
+Run From CLI
+
+```
+vendor/bin/phpunit
+``` 
