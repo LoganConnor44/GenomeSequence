@@ -170,12 +170,12 @@ class GenomeSequence {
 			if ($inString) {
 				$position = $this->getPositionOfMatch($character, $i);
 				$currentMatches = $this->getNumberOfMatches($character, $i, $position);
+			}
 
-				if ($currentMatches > $maxMatch) {
-					$maxMatch = $currentMatches;
-					$maxPosition = $position;
-					$maxIndex = $i;
-				}
+			if ($currentMatches > $maxMatch) {
+				$maxMatch = $currentMatches;
+				$maxPosition = $position;
+				$maxIndex = $i;
 			}
 		}
 
