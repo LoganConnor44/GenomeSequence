@@ -57,7 +57,7 @@ class GenomeSequence {
 	 * @return string
 	 */
 	public function getBeginning(string $fragment) : string {
-		$fragment = trim($fragment);
+		$fragment = $fragment;
 		return substr($fragment, 0, 1);
 	}
 
