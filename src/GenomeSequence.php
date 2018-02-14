@@ -2,7 +2,7 @@
 namespace AderantChallenge;
 
 /**
- * A class to reconstruct fragmented text string back into an original document.
+ * A class to reconstruct fragmented text strings back into an original document.
  */
 class GenomeSequence {
 

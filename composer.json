@@ -1,6 +1,6 @@
 {
-	"description": "Aderant Challenge",
-	"name": "loganconnor44/AderantChallenge",
+	"description": "Genome Sequence",
+	"name": "loganconnor44/GenomeSequence",
 	"type": "project",
 	"autoload": {
 		"psr-4": {
