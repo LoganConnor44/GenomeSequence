@@ -82,9 +82,9 @@ class GenomeSequence {
 	 * 							  matches are found.
 	 * @param integer $source	  The index of the original fragment.
 	 * @param integer $matchIndex The index of the fragment being compared.
-	 * @return array
+	 * @return int
 	 */ 
-	public function getNumberOfMatches(string $characters, int $source, int $matchIndex) : array {
+	public function getNumberOfMatches(string $characters, int $source, int $matchIndex) : int {
 		$start = 1;
 		$length = 1;
 		$numberOfMatches = 1;
@@ -94,49 +94,66 @@ class GenomeSequence {
 			$characters .= $builder;
 			$charsExist = strpos($this->fragments[$matchIndex], $characters);
 			if (!$charsExist) {
-
-				return array(
-					$matchIndex => $numberOfMatches
-				);
+				return $numberOfMatches;
 			}
 			$start++;
 			$numberOfMatches++;
 		}
 	}
 
+	/**
+	 * Merges and unsets the string with the higher index.
+	 * 
+	 * @param integer $source
+	 * @param integer $matchIndex
+	 * @param integer $matchLength
+	 * @return void
+	 */
+	public function mergeFragments(int $source, int $matchIndex, int $matchLength) {
+		$fragmentMin = min($source, $matchIndex);
+		$fragmentMax = max($source, $matchIndex);
+
+		$this->fragments[$fragmentMax] = substr_replace(
+			$this->fragments[$fragmentMax],
+			"",
+			0,
+			$matchLength
+		);
+
+		$this->fragments[$fragmentMin] .= $this->fragments[$fragmentMax];
+		unset($this->fragments[$fragmentMax]);
+		$this->fragments = array_values($this->fragments);
+	}
+
 	public function recompileFragments() {
-		$length = count($this->fragments) - 1;
-		for ($i = 0; $i <= $length; $i++) {
-			$next = $length === $i ? 0 : $i + 1;
-			$beginning = $this->getBeginningAndEnd($this->fragments[$i]);
-
-			$hasBegOrEnd = $this->containBeginning($beginning, $this->fragments[$next]);
-			if ($hasBegOrEnd) {
-				$matches = $this->getCountOfMatches($beginning);
-			}
-		}
-
-
-
-
-
+		echo count($this->getFragments());
+		$maxMatch = 0;
+		$maxPosition = 0;
+		$maxIndex = 0;
 		$length = count($this->fragments) - 1;
 		for ($i = 0; $i <= $length; $i++) {
 			$next = $length === $i ? 0 : $i + 1;
 
 			$character = $this->getBeginning($this->fragments[$i]);
 			$inString = $this->inString($character);
+
 			if ($inString) {
-				$position = $this->getPositionOfMatch($character, $excludeKey);
+				$position = $this->getPositionOfMatch($character, $i);
+				$currentMatches = $this->getNumberOfMatches($character, $i, $position);
 
-				//array ($position => $numberOfMatchingChars)
-				$matches = $this->getNumberOfMatches($character, $i, $position);
+				if ($currentMatches > $maxMatch) {
+					$maxMatch = $currentMatches;
+					$maxPosition = $position;
+					$maxIndex = $i;
+				}
 			}
-
 		}
 
+		$this->mergeFragments($maxIndex, $maxPosition, $maxMatch);
 
-
+		while(count($this->getFragments()) > 1) {
+			self::recompileFragments();
+		}	
 	}
 
 

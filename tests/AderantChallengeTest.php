@@ -48,10 +48,25 @@ class AderantChallengeTest extends TestCase {
 	public function testGetNumberOfMatches() {
 		$this->Genome->setFragments();
 		$result = $this->Genome->getNumberOfMatches('e', 1, 3);
-		$this->assertTrue(is_array($result));
-		$this->assertSame(3, key($result));
-		$this->assertSame(3, $result[3]);
+		$this->assertTrue(is_int($result));
+		$this->assertSame(3, 3);
 	}
+
+	public function testMergeFragments() {
+		$this->Genome->setFragments();
+		$this->Genome->mergeFragments(2, 1, 5);
+		$this->assertSame(3, count($this->Genome->getFragments()));
+	}
+
+	public function testRecompileFragments() {
+		$this->Genome->setFragments()
+			->recompileFragments();
+		$this->assertSame(
+			$this->Genome->getFragments()[0],
+			"alliswellthatendswell"
+		);
+	}
+
 
 }
 
