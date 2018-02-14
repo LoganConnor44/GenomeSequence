@@ -126,6 +126,41 @@ class GenomeSequence {
 	}
 
 	/**
+	 * Iterates through each stringed-array and does a comparision of the most similar text files.
+	 * Identifies the most appropriate strings to merge and sets these as 'max' values.
+	 *
+	 * @return array
+	 */
+	public function findSimilarities() : array {
+		$maxMatch = 0;
+		$maxPosition = 0;
+		$maxIndex = 0;
+		$length = count($this->fragments) - 1;
+		for ($i = 0; $i <= $length; $i++) {
+			$next = $length === $i ? 0 : $i + 1;
+
+			$character = $this->getBeginning($this->fragments[$i]);
+			$inString = $this->inString($character);
+
+			if ($inString) {
+				$position = $this->getPositionOfMatch($character, $i);
+				$currentMatches = $this->getNumberOfMatches($character, $i, $position);
+			}
+
+			if ($currentMatches > $maxMatch) {
+				$maxMatch = $currentMatches;
+				$maxPosition = $position;
+				$maxIndex = $i;
+			}
+		}
+		return array(
+			"maxIndex" => $maxIndex,
+			"maxMatch" => $maxMatch,
+			"maxPosition" => $maxPosition
+		);
+	}
+
+	/**
 	 * Merges and unsets the string with the higher index.
 	 *
 	 * @param integer $source	   The source fragment index.
@@ -150,39 +185,19 @@ class GenomeSequence {
 	}
 
 	/**
-	 * Iterates through each stringed-array and does a comparision of the most similar text files.
 	 * Identifies the most appropriate strings to merge and completes this task until there is only
 	 * a single string remaining.
 	 *
 	 * @return void
 	 */
 	public function recompileFragments() {
-		$maxMatch = 0;
-		$maxPosition = 0;
-		$maxIndex = 0;
-		$length = count($this->fragments) - 1;
-		for ($i = 0; $i <= $length; $i++) {
-			$next = $length === $i ? 0 : $i + 1;
-
-			$character = $this->getBeginning($this->fragments[$i]);
-			$inString = $this->inString($character);
-
-			if ($inString) {
-				$position = $this->getPositionOfMatch($character, $i);
-				$currentMatches = $this->getNumberOfMatches($character, $i, $position);
-			}
-
-			if ($currentMatches > $maxMatch) {
-				$maxMatch = $currentMatches;
-				$maxPosition = $position;
-				$maxIndex = $i;
-			}
-		}
-
-		$this->mergeFragments($maxIndex, $maxPosition, $maxMatch);
-
 		while (count($this->getFragments()) > 1) {
-			self::recompileFragments();
+			$similarities = $this->findSimilarities();
+			$this->mergeFragments(
+				$similarities["maxIndex"],
+				$similarities["maxPosition"],
+				$similarities["maxMatch"]
+			);
 		}
 	}
 
