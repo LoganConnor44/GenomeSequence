@@ -157,7 +157,6 @@ class GenomeSequence {
 	 * @return void
 	 */
 	public function recompileFragments() {
-		echo count($this->getFragments());
 		$maxMatch = 0;
 		$maxPosition = 0;
 		$maxIndex = 0;
