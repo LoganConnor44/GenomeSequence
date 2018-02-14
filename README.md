@@ -19,3 +19,6 @@ search for overlaps and align the fragments to reassemble them into their origin
 * e l l t h a t e n
 * h a t e n d
 * t e n d s w e l l
+
+### Expected Result Text
+* a l l i s w e l l t h a t e n d s w e l l
