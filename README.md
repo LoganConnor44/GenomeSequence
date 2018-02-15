@@ -20,14 +20,14 @@ search for overlaps and align the fragments to reassemble them into their origin
 * h a t e n d
 * t e n d s w e l l
 
-### Expected Result Text
+### Expected Source Result Text
 * a l l i s w e l l t h a t e n d s w e l l
 
 ## How To Verify Correctness
 
 #### Pull In Dependencies
 
-Run From CLI
+Run From CLI *([Composer](getcomposer.org) Installation Needed: )*
 
 ```
 composer install

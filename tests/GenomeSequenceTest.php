@@ -25,7 +25,7 @@ class GenomeSequenceTest extends TestCase {
 	 * @return void
 	 */
 	public function setUp() {
-		$this->filePath = dirname(__FILE__) . "/stubs/source.txt";
+		$this->filePath = dirname(__FILE__) . "/fixtures/source.txt";
 		$this->Genome = new GenomeSequence($this->filePath);
 	}
 
@@ -117,6 +117,32 @@ class GenomeSequenceTest extends TestCase {
 		$this->assertSame(
 			$this->Genome->getFragments()[0],
 			"alliswellthatendswell"
+		);
+	}
+
+	/**
+	 * Verifying that multiple test strings work in the same manner as the defined string for the challenge
+	 * @see Bill & Ted's Excellent Adventure
+	 * @see Thor: Ragnarok
+	 * @return void
+	 */
+	public function testRecompileMovieQuotes() {
+		$this->filePath = dirname(__FILE__) . "/fixtures/excellent.txt";
+		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome->setFragments()
+			->recompileFragments();
+		$this->assertSame(
+			$this->Genome->getFragments()[0],
+			"billstrangethingsareafootatthecirclek"
+		);
+
+		$this->filePath = dirname(__FILE__) . "/fixtures/ragnarok.txt";
+		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome->setFragments()
+			->recompileFragments();
+		$this->assertSame(
+			$this->Genome->getFragments()[0],
+			"We’rethesame,youandI,justacoupleofhotheadedfools.Yes,same.Hulklikefire,Thorlikewater.Well,we’rekindofbothlikefire.ButHulklikeragingfire.Thorlikesmolderingfire."
 		);
 	}
 
