@@ -57,11 +57,14 @@ class GenomeSequence {
 	/**
 	 * Returns the first character in a given string.
 	 *
-	 * @param string $fragment The given string.
+	 * @param string  $fragment 	 The given string.
+	 * @param boolean $reverseString Value to tell method to reverse the given string.
 	 * @return string
 	 */
-	public function getBeginning(string $fragment) : string {
-		$fragment = $fragment;
+	public function getFirstCharacter(string $fragment, bool $reverseString = FALSE) : string {
+		if ($reverseString) {
+			$fragment = strrev($fragment);
+		}
 		return substr($fragment, 0, 1);
 	}
 
@@ -104,18 +107,17 @@ class GenomeSequence {
 	}
 
 	/**
-	 * Returns an array with the index as the index that is being matched against and the value
-	 * as the number of matches/similarities the value has.
-	 * @param string  $characters Passed in as just the first initially but then builds as more
-	 * 							  matches are found.
+	 * Returns the amount of matches found when comparing two strings.
+	 *
 	 * @param integer $source	  The index of the original fragment.
 	 * @param integer $matchIndex The index of the fragment being compared.
 	 * @return integer
 	 */
-	public function getNumberOfMatches(string $characters, int $source, int $matchIndex) : int {
-		$start = 1;
+	public function getNumberOfMatches(int $source, int $matchIndex) : int {
+		$start = 0;
 		$length = 1;
-		$numberOfMatches = 1;
+		$numberOfMatches = 0;
+		$characters = "";
 
 		while (TRUE) {
 			$builder = substr($this->fragments[$source], $start, $length);
@@ -133,9 +135,10 @@ class GenomeSequence {
 	 * Iterates through each stringed-array and does a comparision of the most similar text files.
 	 * Identifies the most appropriate strings to merge and sets these as 'max' values.
 	 *
-	 * NOTE: This approach only works if the fragments are in "order", if the fragments are randomized
-	 * 			a comparison of the last character will need to be created (we are currently only doing
-	 * 			the beginning).
+	 * NOTE: This approach only works if the fragments are in "order" (fragment index 0 is the
+	 * 			beginning of the original document and the max index is the last fragment), if the
+	 * 			fragments are randomized a comparison of the last character will need to be created
+	 * 			(we are currently only doing the beginning).
 	 *
 	 * @return array
 	 */
@@ -145,51 +148,77 @@ class GenomeSequence {
 		$maxIndex = 0;
 		$length = count($this->fragments) - 1;
 		for ($i = 0; $i <= $length; $i++) {
-			$next = $length === $i ? 0 : $i + 1;
-
-			$character = $this->getBeginning($this->fragments[$i]);
+			$character = $this->getFirstCharacter($this->fragments[$i]);
 			$inString = $this->inString($character);
 
 			if ($inString) {
-				$position = $this->getPositionOfMatch($character, $i);
-				$currentMatches = $this->getNumberOfMatches($character, $i, $position);
+				$fragmentPosition = $this->getPositionOfMatch($character, $i);
+				$currentMatches = $this->getNumberOfMatches($i, $fragmentPosition);
 
 				if ($currentMatches > $maxMatch) {
 					$maxMatch = $currentMatches;
-					$maxPosition = $position;
+					$maxPosition = $fragmentPosition;
 					$maxIndex = $i;
 				}
 			}
 		}
 		return array(
 			"maxIndex" => $maxIndex,
-			"maxMatch" => $maxMatch,
-			"maxPosition" => $maxPosition
+			"maxPosition" => $maxPosition,
+			"maxMatch" => $maxMatch
 		);
 	}
 
 	/**
 	 * Merges and unsets the string with the higher index.
 	 *
-	 * @param integer $source	   The source fragment index.
-	 * @param integer $matchIndex  The matched fragment index.
+	 * @param integer $mergeFrom   The fragment index that we will cut data from here
+	 * 							   and put into another fragment.
+	 * @param integer $mergeInto   The fragment index that we are appending data to.
 	 * @param integer $matchLength The length of the matched characters.
 	 * @return void
 	 */
-	public function mergeFragments(int $source, int $matchIndex, int $matchLength) {
-		$fragmentMin = min($source, $matchIndex);
-		$fragmentMax = max($source, $matchIndex);
-
-		$this->fragments[$fragmentMax] = substr_replace(
-			$this->fragments[$fragmentMax],
-			"",
-			0,
+	public function mergeFragments(int $mergeFrom, int $mergeInto, int $matchLength) {
+		$directMatch = $this->isDirectMatch(
+			$this->fragments[$mergeFrom],
+			$this->fragments[$mergeInto],
 			$matchLength
 		);
 
-		$this->fragments[$fragmentMin] .= $this->fragments[$fragmentMax];
-		unset($this->fragments[$fragmentMax]);
+		if ($directMatch) {
+			$this->fragments[$mergeFrom] = substr_replace(
+				$this->fragments[$mergeFrom],
+				"",
+				0,
+				$matchLength
+			);
+		}
+
+		$this->fragments[$mergeInto] .= $this->fragments[$mergeFrom];
+		unset($this->fragments[$mergeFrom]);
 		$this->fragments = array_values($this->fragments);
+	}
+
+	/**
+	 * Verifies if the match that is passed is an arbitrary or direct match.
+	 *
+	 * Arbitrary Match : indy - andiewrt
+	 * Direct Match    : indy - andindy
+	 *
+	 * @param string  $mergeFrom   Adding Better description when fully vetted.
+	 * @param string  $mergeInto   Adding Better description when fully vetted.
+	 * @param integer $matchLength Adding Better description when fully vetted.
+	 * @return boolean
+	 */
+	public function isDirectMatch(string $mergeFrom, string $mergeInto, int $matchLength) : bool {
+		$maxFragmentBeginning = substr($mergeFrom, 0, 1);
+		$startingPositionExists = strpos($mergeInto, $maxFragmentBeginning);
+		$mergeIntoSub = substr($mergeFrom, $startingPositionExists-1);
+		$maxFragmentBeginning .= $mergeIntoSub;
+		$value = strstr($mergeInto, $maxFragmentBeginning);
+		// Return $value;
+		// Fix before updating.
+		return TRUE;
 	}
 
 	/**

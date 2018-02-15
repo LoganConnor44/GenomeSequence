@@ -51,13 +51,13 @@ class GenomeSequenceTest extends TestCase {
 	}
 
 	/**
-	 * Verify that the getBeginning() retrives the first character.
+	 * Verify that the getFirstCharacter() retrives the first character.
 	 *
 	 * @return void
 	 */
-	public function testGetBeginning() {
+	public function testGetFirstCharacter() {
 		$this->Genome->setFragments();
-		$character = $this->Genome->getBeginning("this is just a sample string");
+		$character = $this->Genome->getFirstCharacter("this is just a sample string");
 		$this->assertEquals("t", $character);
 	}
 
@@ -92,7 +92,7 @@ class GenomeSequenceTest extends TestCase {
 	 */
 	public function testGetNumberOfMatches() {
 		$this->Genome->setFragments();
-		$result = $this->Genome->getNumberOfMatches('e', 1, 3);
+		$result = $this->Genome->getNumberOfMatches(1, 3);
 		$this->assertTrue(is_int($result));
 		$this->assertSame(3, 3);
 	}
@@ -146,6 +146,38 @@ class GenomeSequenceTest extends TestCase {
 		$this->assertSame(
 			$this->Genome->getFragments()[0],
 			"We’rethesame,youandI,justacoupleofhotheadedfools.Yes,same.Hulklikefire,Thorlikewater.Well,we’rekindofbothlikefire.ButHulklikeragingfire.Thorlikesmolderingfire."
+		);
+	}
+
+	/**
+	 * Adding comment.
+	 *
+	 * @return void
+	 */
+	public function testNoMatch() {
+		$this->filePath = dirname(__FILE__) . "/fixtures/no-match.txt";
+		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome->setFragments()
+			->recompileFragments();
+		$this->assertSame(
+			$this->Genome->getFragments()[0],
+			"thiswillnotmatchatall"
+		);
+	}
+
+	/**
+	 * Verify that source file that randomizes it's fragments will still compile correctly.
+	 *
+	 * @return void
+	 */
+	public function testRandomOrderMatch() {
+		$this->filePath = dirname(__FILE__) . "/fixtures/random-order-source.txt";
+		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome->setFragments()
+			->recompileFragments();
+		$this->assertSame(
+			$this->Genome->getFragments()[0],
+			"alliswellthatendswell"
 		);
 	}
 
