@@ -123,7 +123,7 @@ class GenomeSequence {
 			$builder = substr($this->fragments[$source], $start, $length);
 			$characters .= $builder;
 			$charsExist = strpos($this->fragments[$matchIndex], $characters);
-			if (!$charsExist) {
+			if (!$charsExist || strlen($characters) === strlen($this->fragments[$source])) {
 				return $numberOfMatches;
 			}
 			$start++;
@@ -202,7 +202,9 @@ class GenomeSequence {
 	/**
 	 * Verifies if the match that is passed is an arbitrary or direct match.
 	 *
-	 * Arbitrary Match : indy - andiewrt
+	 * Arbitrary Match : thiswillnot - matchatall
+	 *		The first "t" will find the other t's in 'matchatall' but have no
+	 * 		other similarities.
 	 * Direct Match    : indy - andindy
 	 *
 	 * @param string  $mergeFrom   Adding Better description when fully vetted.
@@ -211,14 +213,12 @@ class GenomeSequence {
 	 * @return boolean
 	 */
 	public function isDirectMatch(string $mergeFrom, string $mergeInto, int $matchLength) : bool {
-		$maxFragmentBeginning = substr($mergeFrom, 0, 1);
-		$startingPositionExists = strpos($mergeInto, $maxFragmentBeginning);
-		$mergeIntoSub = substr($mergeFrom, $startingPositionExists-1);
-		$maxFragmentBeginning .= $mergeIntoSub;
-		$value = strstr($mergeInto, $maxFragmentBeginning);
-		// Return $value;
-		// Fix before updating.
-		return TRUE;
+		$beginningFromFrag = substr($mergeFrom, 0, 2);
+		$bool = preg_match("[$beginningFromFrag]", $mergeInto);
+		if ($bool !== 1) {
+			return FALSE;
+		}
+		return true;
 	}
 
 	/**
