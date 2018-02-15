@@ -8,18 +8,21 @@ class GenomeSequence {
 
 	/**
 	 * Path to the fragmented text document.
+	 *
 	 * @var string
 	 */
 	private $filePath;
 
 	/**
 	 * Fragmented text strings.
+	 *
 	 * @var array
 	 */
 	private $fragments;
 
 	/**
 	 * Instantiated with a path to the source text file.
+	 *
 	 * @param string $filePath Path to the fragmented text document.
 	 */
 	public function __construct(string $filePath) {
@@ -43,7 +46,8 @@ class GenomeSequence {
 	}
 
 	/**
-	 * Returns the private property of $fragments
+	 * Returns the private property of $fragments.
+	 *
 	 * @return array
 	 */
 	public function getFragments() : array {
@@ -53,7 +57,7 @@ class GenomeSequence {
 	/**
 	 * Returns the first character in a given string.
 	 *
-	 * @param string $fragment The given String.
+	 * @param string $fragment The given string.
 	 * @return string
 	 */
 	public function getBeginning(string $fragment) : string {
@@ -128,6 +132,10 @@ class GenomeSequence {
 	/**
 	 * Iterates through each stringed-array and does a comparision of the most similar text files.
 	 * Identifies the most appropriate strings to merge and sets these as 'max' values.
+	 *
+	 * NOTE: This approach only works if the fragments are in "order", if the fragments are randomized
+	 * 			a comparison of the last character will need to be created (we are currently only doing
+	 * 			the beginning).
 	 *
 	 * @return array
 	 */
