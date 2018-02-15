@@ -9,12 +9,14 @@ class GenomeSequenceTest extends TestCase {
 
 	/**
 	 * Path to the fragmented text document.
+	 *
 	 * @var string
 	 */
 	private $filePath;
 
 	/**
-	 * Object GenomeSequence that is being tested
+	 * Object GenomeSequence that is being tested.
+	 *
 	 * @var GenomeSequence
 	 */
 	private $Genome;
@@ -121,7 +123,8 @@ class GenomeSequenceTest extends TestCase {
 	}
 
 	/**
-	 * Verifying that multiple test strings work in the same manner as the defined string for the challenge
+	 * Verify that multiple test strings work in the same manner as the defined string for the challenge.
+	 *
 	 * @see Bill & Ted's Excellent Adventure
 	 * @see Thor: Ragnarok
 	 * @return void
