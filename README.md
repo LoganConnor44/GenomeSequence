@@ -27,7 +27,7 @@ search for overlaps and align the fragments to reassemble them into their origin
 
 #### Pull In Dependencies
 
-Run From CLI ([Composer](https://getcomposer.org/) Needed)
+Run From CLI ([Composer](https://getcomposer.org/download/) Needed)
 
 ```
 composer install
