@@ -40,3 +40,16 @@ Run From CLI
 ```
 vendor/bin/phpunit
 ``` 
+
+##### PHPUnit Output
+
+```
+Logans-MacBook-Pro:aderantChallenge LoganConnor$ vendor/bin/phpunit
+PHPUnit 6.5.6 by Sebastian Bergmann and contributors.
+
+.........                                                           9 / 9 (100%)
+
+Time: 31 ms, Memory: 4.00MB
+
+OK (9 tests, 13 assertions)
+```
