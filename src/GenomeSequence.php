@@ -1,5 +1,5 @@
 <?php declare (strict_types = 1);
-namespace AderantChallenge;
+namespace ShotgunSequencing;
 
 /**
  * A class to reconstruct fragmented text strings back into an original document.

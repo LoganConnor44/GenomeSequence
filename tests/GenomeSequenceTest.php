@@ -1,5 +1,5 @@
 <?php declare (strict_types = 1);
-use AderantChallenge\GenomeSequence;
+use ShotgunSequencing\GenomeSequence;
 use PHPUnit\Framework\TestCase;
 
 /**
