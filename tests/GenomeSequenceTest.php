@@ -79,7 +79,7 @@ class GenomeSequenceTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testGetPositionOfChar() {
+	public function testGetPositionOfMatch() {
 		$this->Genome->setFragments();
 		$position = $this->Genome->getPositionOfMatch('i', 3);
 		$this->assertSame($position, 0);
@@ -106,6 +106,37 @@ class GenomeSequenceTest extends TestCase {
 		$this->Genome->setFragments();
 		$this->Genome->mergeFragments(2, 1, 5);
 		$this->assertSame(3, count($this->Genome->getFragments()));
+	}
+
+	/**
+	 * Verify that the string with the most similarities is correctly being sent back
+	 * to be the first to be merged into it's pair.
+	 *
+	 * @return void
+	 */
+	public function testFindSimilarities() {
+		$this->Genome->setFragments();
+		$similarities = $this->Genome->findSimilarities();
+		$this->assertEquals(2, $similarities["maxIndex"]);
+	}
+
+	/**
+	 * Verify if a match is significant, even if there is only one match.
+	 *
+	 * @return void
+	 */
+	public function testIsMatchSignificant() {
+		$this->filePath = dirname(__FILE__) . "/fixtures/significant.txt";
+		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome->setFragments();
+		$true = $this->Genome->isMatchSignificant(0, 1);
+		$this->assertTrue($true);
+
+		$this->filePath = dirname(__FILE__) . "/fixtures/not-significant.txt";
+		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome->setFragments();
+		$false = $this->Genome->isMatchSignificant(0, 1);
+		$this->assertFalse($false);
 	}
 
 	/**

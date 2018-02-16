@@ -47,10 +47,9 @@ vendor/bin/phpunit
 Logans-MacBook-Pro:aderantChallenge LoganConnor$ vendor/bin/phpunit
 PHPUnit 6.5.6 by Sebastian Bergmann and contributors.
 
-...........                                                       11 / 11 (100%)
+.............                                                     13 / 13 (100%)
 
-Time: 55 ms, Memory: 4.00MB
+Time: 36 ms, Memory: 4.00MB
 
-OK (11 tests, 15 assertions)
-Logans-MacBook-Pro:aderantChallenge LoganConnor$ 
+OK (13 tests, 18 assertions)
 ```
