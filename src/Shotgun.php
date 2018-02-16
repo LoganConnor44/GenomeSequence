@@ -1,10 +1,10 @@
 <?php declare (strict_types = 1);
-namespace ShotgunSequencing;
+namespace GenomeSequence;
 
 /**
  * A class to reconstruct fragmented text strings back into an original document.
  */
-class GenomeSequence {
+class Shotgun {
 
 	/**
 	 * Path to the fragmented text document.
@@ -32,9 +32,9 @@ class GenomeSequence {
 	/**
 	 * Sets the class property by reading a text file.
 	 *
-	 * @return GenomeSequence
+	 * @return Shotgun
 	 */
-	public function setFragments() : GenomeSequence {
+	public function setFragments() : Shotgun {
 		$handle = fopen($this->filePath, "r");
 		if ($handle) {
 			while (($buffer = fgets($handle, 4096)) !== false) {

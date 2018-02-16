@@ -1,11 +1,11 @@
 <?php declare (strict_types = 1);
-use ShotgunSequencing\GenomeSequence;
+use GenomeSequence\Shotgun;
 use PHPUnit\Framework\TestCase;
 
 /**
  * A unit testing class for all GenomeSequencing methods.
  */
-class GenomeSequenceTest extends TestCase {
+class ShotgunTest extends TestCase {
 
 	/**
 	 * Path to the fragmented text document.
@@ -28,7 +28,7 @@ class GenomeSequenceTest extends TestCase {
 	 */
 	public function setUp() {
 		$this->filePath = dirname(__FILE__) . "/fixtures/source.txt";
-		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome = new Shotgun($this->filePath);
 	}
 
 	/**
@@ -127,13 +127,13 @@ class GenomeSequenceTest extends TestCase {
 	 */
 	public function testIsMatchSignificant() {
 		$this->filePath = dirname(__FILE__) . "/fixtures/significant.txt";
-		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome = new Shotgun($this->filePath);
 		$this->Genome->setFragments();
 		$true = $this->Genome->isMatchSignificant(0, 1);
 		$this->assertTrue($true);
 
 		$this->filePath = dirname(__FILE__) . "/fixtures/not-significant.txt";
-		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome = new Shotgun($this->filePath);
 		$this->Genome->setFragments();
 		$false = $this->Genome->isMatchSignificant(0, 1);
 		$this->assertFalse($false);
@@ -162,7 +162,7 @@ class GenomeSequenceTest extends TestCase {
 	 */
 	public function testRecompileMovieQuotes() {
 		$this->filePath = dirname(__FILE__) . "/fixtures/excellent.txt";
-		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome = new Shotgun($this->filePath);
 		$this->Genome->setFragments()
 			->recompileFragments();
 		$this->assertSame(
@@ -171,7 +171,7 @@ class GenomeSequenceTest extends TestCase {
 		);
 
 		$this->filePath = dirname(__FILE__) . "/fixtures/ragnarok.txt";
-		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome = new Shotgun($this->filePath);
 		$this->Genome->setFragments()
 			->recompileFragments();
 		$this->assertSame(
@@ -190,7 +190,7 @@ class GenomeSequenceTest extends TestCase {
 	 */
 	public function testNoMatch() {
 		$this->filePath = dirname(__FILE__) . "/fixtures/no-match.txt";
-		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome = new Shotgun($this->filePath);
 		$this->Genome->setFragments()
 			->recompileFragments();
 		$this->assertSame(
@@ -206,7 +206,7 @@ class GenomeSequenceTest extends TestCase {
 	 */
 	public function testRandomOrderMatch() {
 		$this->filePath = dirname(__FILE__) . "/fixtures/random-order-source.txt";
-		$this->Genome = new GenomeSequence($this->filePath);
+		$this->Genome = new Shotgun($this->filePath);
 		$this->Genome->setFragments()
 			->recompileFragments();
 		$this->assertSame(
