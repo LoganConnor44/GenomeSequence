@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types = 1);
 namespace AderantChallenge;
 
 /**
@@ -116,18 +116,19 @@ class GenomeSequence {
 	public function getNumberOfMatches(int $source, int $matchIndex) : int {
 		$start = 0;
 		$length = 1;
-		$numberOfMatches = 0;
 		$characters = "";
+		$significant = TRUE;
 
 		while (TRUE) {
 			$builder = substr($this->fragments[$source], $start, $length);
 			$characters .= $builder;
-			$charsExist = strpos($this->fragments[$matchIndex], $characters);
-			if (!$charsExist || strlen($characters) === strlen($this->fragments[$source])) {
-				return $numberOfMatches;
+			$charsExist = preg_match("[$characters]", $this->fragments[$matchIndex]);
+			$matches = strlen($characters);
+			
+			if (!$charsExist || $matches === strlen($this->fragments[$source])) {
+				return $matches - 1;
 			}
 			$start++;
-			$numberOfMatches++;
 		}
 	}
 
@@ -176,16 +177,15 @@ class GenomeSequence {
 	 * 							   and put into another fragment.
 	 * @param integer $mergeInto   The fragment index that we are appending data to.
 	 * @param integer $matchLength The length of the matched characters.
+	 * @param boolean $significant Determines if a merge is necessary when the $matchLength is one.
 	 * @return void
 	 */
-	public function mergeFragments(int $mergeFrom, int $mergeInto, int $matchLength) {
-		$directMatch = $this->isDirectMatch(
-			$this->fragments[$mergeFrom],
-			$this->fragments[$mergeInto],
-			$matchLength
-		);
+	public function mergeFragments(int $mergeFrom, int $mergeInto, int $matchLength, bool $significant = TRUE) {
+		if ($matchLength <= 1) {
+			$significant = $this->isMatchSignificant($mergeFrom, $mergeInto);
+		}
 
-		if ($directMatch) {
+		if ($significant) {
 			$this->fragments[$mergeFrom] = substr_replace(
 				$this->fragments[$mergeFrom],
 				"",
@@ -193,32 +193,25 @@ class GenomeSequence {
 				$matchLength
 			);
 		}
-
+		
 		$this->fragments[$mergeInto] .= $this->fragments[$mergeFrom];
 		unset($this->fragments[$mergeFrom]);
 		$this->fragments = array_values($this->fragments);
 	}
 
 	/**
-	 * Verifies if the match that is passed is an arbitrary or direct match.
+	 * If the match between two fragments is only one character, verify if this match is significant or
+	 * and arbitrary match (single character found randomly in the string).
 	 *
-	 * Arbitrary Match : thiswillnot - matchatall
-	 *		The first "t" will find the other t's in 'matchatall' but have no
-	 * 		other similarities.
-	 * Direct Match    : indy - andindy
-	 *
-	 * @param string  $mergeFrom   Adding Better description when fully vetted.
-	 * @param string  $mergeInto   Adding Better description when fully vetted.
-	 * @param integer $matchLength Adding Better description when fully vetted.
+	 * @param integer $mergeFrom The fragment index that we will cut data from here
+	 * 							   and put into another fragment.
+	 * @param integer $mergeInto The fragment index that we are appending data to.
 	 * @return boolean
 	 */
-	public function isDirectMatch(string $mergeFrom, string $mergeInto, int $matchLength) : bool {
-		$beginningFromFrag = substr($mergeFrom, 0, 2);
-		$bool = preg_match("[$beginningFromFrag]", $mergeInto);
-		if ($bool !== 1) {
-			return FALSE;
-		}
-		return true;
+	public function isMatchSignificant(int $mergeFrom, int $mergeInto) : bool {
+		$firstChar = substr($this->fragments[$mergeFrom], 0, 1);
+		$lastChar = substr(strrev($this->fragments[$mergeInto]), 0, 1);
+		return $firstChar === $lastChar;
 	}
 
 	/**

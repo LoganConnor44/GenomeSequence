@@ -1,4 +1,4 @@
-<?php
+<?php declare (strict_types = 1);
 use AderantChallenge\GenomeSequence;
 use PHPUnit\Framework\TestCase;
 
@@ -150,7 +150,10 @@ class GenomeSequenceTest extends TestCase {
 	}
 
 	/**
-	 * Adding comment.
+	 * Verifying that is there is no match between the characters the fragment is concatenated together
+	 * in any order.
+	 *
+	 * NOTE: When reading the expected value you must read it in Yoda's voice.
 	 *
 	 * @return void
 	 */
@@ -161,12 +164,12 @@ class GenomeSequenceTest extends TestCase {
 			->recompileFragments();
 		$this->assertSame(
 			$this->Genome->getFragments()[0],
-			"thiswillnotmatchatall"
+			"matchatallthiswillnot"
 		);
 	}
 
 	/**
-	 * Verify that source file that randomizes it's fragments will still compile correctly.
+	 * Verify that if the source file is randomized it's fragments will still compile correctly.
 	 *
 	 * @return void
 	 */
@@ -180,7 +183,6 @@ class GenomeSequenceTest extends TestCase {
 			"alliswellthatendswell"
 		);
 	}
-
 }
 
 
