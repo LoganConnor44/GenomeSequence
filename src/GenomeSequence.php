@@ -57,14 +57,10 @@ class GenomeSequence {
 	/**
 	 * Returns the first character in a given string.
 	 *
-	 * @param string  $fragment 	 The given string.
-	 * @param boolean $reverseString Value to tell method to reverse the given string.
+	 * @param string $fragment The given string.
 	 * @return string
 	 */
-	public function getFirstCharacter(string $fragment, bool $reverseString = FALSE) : string {
-		if ($reverseString) {
-			$fragment = strrev($fragment);
-		}
+	public function getFirstCharacter(string $fragment) : string {
 		return substr($fragment, 0, 1);
 	}
 
@@ -109,7 +105,7 @@ class GenomeSequence {
 	/**
 	 * Returns the amount of matches found when comparing two strings.
 	 *
-	 * @param integer $source	  The index of the original fragment.
+	 * @param integer $source     The index of the original fragment.
 	 * @param integer $matchIndex The index of the fragment being compared.
 	 * @return integer
 	 */
@@ -135,11 +131,6 @@ class GenomeSequence {
 	/**
 	 * Iterates through each stringed-array and does a comparision of the most similar text files.
 	 * Identifies the most appropriate strings to merge and sets these as 'max' values.
-	 *
-	 * NOTE: This approach only works if the fragments are in "order" (fragment index 0 is the
-	 * 			beginning of the original document and the max index is the last fragment), if the
-	 * 			fragments are randomized a comparison of the last character will need to be created
-	 * 			(we are currently only doing the beginning).
 	 *
 	 * @return array
 	 */
@@ -171,7 +162,7 @@ class GenomeSequence {
 	}
 
 	/**
-	 * Merges and unsets the string with the higher index.
+	 * Merges and unsets the string with the lower match length.
 	 *
 	 * @param integer $mergeFrom   The fragment index that we will cut data from here
 	 * 							   and put into another fragment.
@@ -201,10 +192,10 @@ class GenomeSequence {
 
 	/**
 	 * If the match between two fragments is only one character, verify if this match is significant or
-	 * and arbitrary match (single character found randomly in the string).
+	 * an arbitrary match (single character found randomly in the string).
 	 *
 	 * @param integer $mergeFrom The fragment index that we will cut data from here
-	 * 							   and put into another fragment.
+	 * 							 and put into another fragment.
 	 * @param integer $mergeInto The fragment index that we are appending data to.
 	 * @return boolean
 	 */
