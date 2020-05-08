@@ -44,7 +44,7 @@ vendor/bin/phpunit
 ##### PHPUnit Output
 
 ```
-Logans-MacBook-Pro:aderantChallenge LoganConnor$ vendor/bin/phpunit
+Logans-MacBook-Pro:funChallenge LoganConnor$ vendor/bin/phpunit
 PHPUnit 6.5.6 by Sebastian Bergmann and contributors.
 
 .............                                                     13 / 13 (100%)
